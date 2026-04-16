@@ -3,19 +3,26 @@ import { motion } from "framer-motion";
 
 const SIZE = 3;
 const TOTAL = SIZE * SIZE;
-const BOARD_SIZE = 360;
-
 function PuzzleGame({ onWin }) {
+  const [boardSize, setBoardSize] = useState(300);
   const [pieces, setPieces] = useState([]);
   const [isWon, setIsWon] = useState(false);
   const containerRef = useRef(null);
 
   useEffect(() => {
+    const updateSize = () => {
+      setBoardSize(Math.min(window.innerWidth * 0.85, 360));
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+
     const shuffled = [...Array(TOTAL).keys()].sort(() => Math.random() - 0.5);
     setPieces(shuffled);
+
+    return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  const cellSize = BOARD_SIZE / SIZE;
+  const cellSize = boardSize / SIZE;
 
   const checkWin = (arr) => arr.every((val, i) => val === i);
 
@@ -25,25 +32,19 @@ function PuzzleGame({ onWin }) {
     return { x: col * cellSize, y: row * cellSize };
   };
 
-  const getDropIndex = (x, y) => {
-    const rect = containerRef.current.getBoundingClientRect();
-
-    if (
-      x < rect.left ||
-      x > rect.right ||
-      y < rect.top ||
-      y > rect.bottom
-    ) return null;
-
-    const col = Math.floor(((x - rect.left) / rect.width) * SIZE);
-    const row = Math.floor(((y - rect.top) / rect.height) * SIZE);
-
-    return row * SIZE + col;
-  };
-
   const handleDragEnd = (index, event, info) => {
-    const dropIndex = getDropIndex(info.point.x, info.point.y);
-    if (dropIndex === null) return;
+    // page coordinates to container relative
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = info.point.x - rect.left;
+    const y = info.point.y - rect.top;
+
+    if (x < 0 || x > boardSize || y < 0 || y > boardSize) return;
+
+    const col = Math.floor((x / boardSize) * SIZE);
+    const row = Math.floor((y / boardSize) * SIZE);
+    const dropIndex = row * SIZE + col;
+
+    if (dropIndex === index) return;
 
     const newPieces = [...pieces];
     [newPieces[index], newPieces[dropIndex]] = [
@@ -53,7 +54,6 @@ function PuzzleGame({ onWin }) {
 
     setPieces(newPieces);
 
-    // ✅ IMPORTANT: detect win HERE
     if (checkWin(newPieces)) {
       setIsWon(true);
     }
@@ -87,9 +87,10 @@ function PuzzleGame({ onWin }) {
         ref={containerRef}
         style={{
           position: "relative",
-          width: BOARD_SIZE,
-          height: BOARD_SIZE,
+          width: boardSize,
+          height: boardSize,
           margin: "20px auto",
+          touchAction: "none", // Prevent scroll interference
         }}
       >
         {pieces.map((val, index) => {
@@ -100,9 +101,12 @@ function PuzzleGame({ onWin }) {
               key={val}
               drag
               dragConstraints={containerRef}
+              dragElastic={0.1}
+              dragMomentum={false}
               onDragEnd={(e, info) => handleDragEnd(index, e, info)}
               animate={{ x: pos.x, y: pos.y }}
-              transition={{ type: "spring", stiffness: 300 }}
+              whileDrag={{ zIndex: 10, scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
               style={{
                 position: "absolute",
                 width: cellSize,
