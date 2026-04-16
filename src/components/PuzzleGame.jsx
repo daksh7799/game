@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const SIZE = 3;
 const TOTAL = SIZE * SIZE;
-const BOARD_SIZE = 360;
+const BOARD_SIZE = Math.min(window.innerWidth * 0.9, 360); // Responsive board size
 
 function PuzzleGame({ onWin }) {
   const [pieces, setPieces] = useState([]);
@@ -76,6 +76,7 @@ function PuzzleGame({ onWin }) {
       backgroundImage: "url('/puzzle.jpg')",
       backgroundSize: `${SIZE * 100}% ${SIZE * 100}%`,
       backgroundPosition: `${(col / (SIZE - 1)) * 100}% ${(row / (SIZE - 1)) * 100}%`,
+      boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.1)", // Subtle border between pieces
     };
   };
 

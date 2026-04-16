@@ -4,18 +4,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 const QUESTIONS = [
   {
     line: "Gulabi aankhen jo teri dekhi ____",
-    options: ["", "Dard ho jaata hai", "Machal jaata hai"],
-    correct: 0
-  },
-  {
-    line: "Mere sapno ki rani kab ____",
-    options: ["kaha chali gayi tu", "Aayegi tu", "dance karegi tu"],
+    options: ["Ulti karne ka man kar gaya", "Sharabi yeh dil ho gaya", "bandar ki yaad aagayi"],
     correct: 1
   },
   {
-    line: "Pal pal dil ke paas tum____",
-    options: ["gaana gaati hai", "soti rehti ho", "rehti ho"],
-    correct: 2
+    line: "Kabhi kabhi mere dil mein ____",
+    options: ["Khayal Aata hai", "Dard ho jaata hai", "Rakhi Sawant Aajati hai"],
+    correct: 0
+  },
+  {
+    line: "Chura liya hai tumne jo dil ko ____",
+    options: ["Kaccha mat chaurana please", "Nazar nahi churana sanam", "Vapis Karjana mujhe"],
+    correct: 1
   }
 ];
 
