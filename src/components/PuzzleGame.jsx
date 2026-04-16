@@ -16,7 +16,23 @@ function PuzzleGame({ onWin }) {
     updateSize();
     window.addEventListener('resize', updateSize);
 
-    const shuffled = [...Array(TOTAL).keys()].sort(() => Math.random() - 0.5);
+    let shuffled = [...Array(TOTAL).keys()];
+    
+    // Robust Fisher-Yates shuffle
+    const doShuffle = (arr) => {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    };
+    
+    doShuffle(shuffled);
+    
+    // Ensure it doesn't accidentally start solved
+    while (shuffled.every((val, i) => val === i)) {
+      doShuffle(shuffled);
+    }
+    
     setPieces(shuffled);
 
     return () => window.removeEventListener('resize', updateSize);
