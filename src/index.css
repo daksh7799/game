@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --bg-color: #5c0f14;
   --bg-gradient: radial-gradient(circle at center, #8a161e 0%, #3a0a0d 100%);
@@ -26,7 +30,7 @@ body {
 
 .game-container {
   width: 100%;
-  max-width: 450px; /* Standard phone width max */
+  max-width: 450px;
   height: 100dvh;
   margin: 0 auto;
   position: relative;
@@ -35,17 +39,18 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 16px;
-  box-sizing: border-box;
+  padding: 0 24px; /* Increased side padding for mobile borders */
 }
 
 .card {
   background-color: var(--card-bg);
   border-radius: var(--border-radius);
-  padding: 32px;
+  padding: 32px 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  width: 90%;
+  width: 100%; /* Now relies on parent padding for margins */
+  max-width: 400px;
   border: 4px dashed var(--text-dark);
+  margin: 0 auto;
 }
 
 h1, h2, h3 {
